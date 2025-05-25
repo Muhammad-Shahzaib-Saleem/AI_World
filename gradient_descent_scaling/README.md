@@ -21,6 +21,11 @@ A comprehensive Streamlit application that demonstrates the impact of different 
 - **Cost Function Tracking**: Real-time monitoring of MSE convergence
 - **Multiple Scaling Comparison**: Side-by-side comparison of different scaling methods
 - **Performance Metrics**: MSE, RMSE, MAE, R² score for train and test sets
+- **🆕 Iteration-by-Iteration Tracking**: Complete visibility into the optimization process
+  - **Detailed Summary Table**: Cost, learning rate, bias, and weights for each iteration
+  - **Cost Progress Visualization**: Interactive plots showing convergence behavior
+  - **Parameters Evolution**: Real-time tracking of how weights and learning rate change
+  - **CSV Export**: Download complete iteration details for further analysis
 
 ### 📈 Advanced Visualizations
 - **Cost Function Convergence**: Interactive plots showing optimization progress
