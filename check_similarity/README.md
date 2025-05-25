@@ -1,26 +1,34 @@
-# File Similarity Checker
+# 📄 File Similarity Checker
 
-A Streamlit web application that calculates the similarity between two text files using cosine similarity.
+A comprehensive Streamlit application that analyzes and compares the content similarity between two files using advanced cosine similarity with TF-IDF vectorization.
 
-## Features
+## ✨ Features
 
-- 📄 Upload two text files for comparison
-- 🔍 Calculate cosine similarity using TF-IDF vectors
-- 📊 Visual similarity metrics and progress bars
-- 📈 Detailed interpretation of similarity scores
-- 📋 File statistics (character, word, and line counts)
-- 🎨 Clean and intuitive user interface
+### Core Functionality
+- **Multi-format Support**: TXT, PDF, DOCX, CSV files
+- **Advanced Similarity Analysis**: Cosine similarity with TF-IDF vectorization
+- **Interactive Visualizations**: Gauge charts, bar charts, and statistical comparisons
+- **Real-time Processing**: Instant analysis with progress indicators
 
-## Supported File Types
+### Analysis Capabilities
+- **Similarity Score**: Precise cosine similarity calculation (0.0 - 1.0)
+- **Text Statistics**: Character, word, sentence, and unique word counts
+- **Common Words Analysis**: Frequency analysis of shared vocabulary
+- **Word Clouds**: Visual representation of text content (optional)
+- **Text Preview**: Side-by-side content comparison
 
-- `.txt` - Plain text files
-- `.md` - Markdown files
-- `.py` - Python files
-- `.js` - JavaScript files
-- `.html` - HTML files
-- `.css` - CSS files
-- `.json` - JSON files
-- `.csv` - CSV files
+### User Interface
+- **Modern Design**: Clean, responsive interface with gradient styling
+- **Sidebar Controls**: Easy file upload and analysis options
+- **Interactive Charts**: Plotly-powered visualizations
+- **Customizable Settings**: Adjustable preprocessing parameters
+
+## 📁 Supported File Types
+
+- **Text Files** (.txt): Plain text documents
+- **PDF Documents** (.pdf): Portable Document Format
+- **Word Documents** (.docx, .doc): Microsoft Word files
+- **CSV Files** (.csv): Comma-separated values
 
 ## Installation
 
