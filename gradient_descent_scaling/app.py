@@ -92,11 +92,24 @@ class GradientDescentRegressor:
         self.y_mean = y_mean
         self.y_std = y_std
         
+        # Store detailed iteration information
+        self.iteration_details = []
+        
         # Gradient descent
         for i in range(self.max_iterations):
             # Compute cost
             cost = self._compute_cost(X_scaled, y_normalized)
             self.cost_history.append(cost)
+            
+            # Store iteration details
+            iteration_info = {
+                'iteration': i + 1,
+                'cost': cost,
+                'learning_rate': self.learning_rate,
+                'weights': self.weights.copy(),
+                'bias': self.bias
+            }
+            self.iteration_details.append(iteration_info)
             
             # Check for NaN or infinite values
             if np.isnan(cost) or np.isinf(cost):
@@ -157,6 +170,10 @@ class GradientDescentRegressor:
             'MAE': mae,
             'R²': r2
         }
+    
+    def get_iteration_details(self):
+        """Get detailed information about each iteration"""
+        return self.iteration_details
 
 def load_and_preprocess_data(uploaded_file):
     """Load and preprocess the uploaded dataset"""
@@ -485,6 +502,169 @@ def main():
                         title='Feature Weights by Scaling Method'
                     )
                     st.plotly_chart(fig, use_container_width=True)
+                    
+                    # Iteration Details Section
+                    st.subheader("🔍 Detailed Iteration Analysis")
+                    
+                    # Method selection for iteration details
+                    selected_method_for_details = st.selectbox(
+                        "Select scaling method to view iteration details:",
+                        options=list(results.keys()),
+                        format_func=lambda x: scaling_methods[x],
+                        key="iteration_details_method"
+                    )
+                    
+                    if selected_method_for_details in results:
+                        model = results[selected_method_for_details]['model']
+                        iteration_details = model.get_iteration_details()
+                        
+                        # Create tabs for different views
+                        tab1, tab2, tab3 = st.tabs(["📊 Summary Table", "📈 Cost Progress", "⚙️ Parameters Evolution"])
+                        
+                        with tab1:
+                            st.write(f"**Iteration Details for {scaling_methods[selected_method_for_details]}**")
+                            
+                            # Show iteration summary (every 10th iteration for large datasets)
+                            if len(iteration_details) > 50:
+                                step = max(1, len(iteration_details) // 50)
+                                display_iterations = iteration_details[::step] + [iteration_details[-1]]
+                                st.info(f"Showing every {step} iterations for better readability (total: {len(iteration_details)} iterations)")
+                            else:
+                                display_iterations = iteration_details
+                            
+                            # Create summary dataframe
+                            summary_data = []
+                            for detail in display_iterations:
+                                summary_data.append({
+                                    'Iteration': detail['iteration'],
+                                    'Cost': f"{detail['cost']:.6f}",
+                                    'Learning Rate': f"{detail['learning_rate']:.6f}",
+                                    'Bias': f"{detail['bias']:.6f}",
+                                    'Avg Weight': f"{np.mean(np.abs(detail['weights'])):.6f}"
+                                })
+                            
+                            summary_df = pd.DataFrame(summary_data)
+                            st.dataframe(summary_df, use_container_width=True, height=400)
+                            
+                            # Download option for full iteration details
+                            if st.button("📥 Download Full Iteration Details", key="download_iterations"):
+                                full_data = []
+                                for detail in iteration_details:
+                                    row = {
+                                        'Iteration': detail['iteration'],
+                                        'Cost': detail['cost'],
+                                        'Learning_Rate': detail['learning_rate'],
+                                        'Bias': detail['bias']
+                                    }
+                                    # Add individual weights
+                                    for i, weight in enumerate(detail['weights']):
+                                        row[f'Weight_{i+1}'] = weight
+                                    full_data.append(row)
+                                
+                                full_df = pd.DataFrame(full_data)
+                                csv = full_df.to_csv(index=False)
+                                st.download_button(
+                                    label="Download CSV",
+                                    data=csv,
+                                    file_name=f"iteration_details_{selected_method_for_details}.csv",
+                                    mime="text/csv"
+                                )
+                        
+                        with tab2:
+                            st.write("**Cost Function Progress Over Iterations**")
+                            
+                            # Create detailed cost plot
+                            iterations = [d['iteration'] for d in iteration_details]
+                            costs = [d['cost'] for d in iteration_details]
+                            
+                            fig = go.Figure()
+                            fig.add_trace(go.Scatter(
+                                x=iterations,
+                                y=costs,
+                                mode='lines+markers',
+                                name='Cost',
+                                line=dict(color='blue', width=2),
+                                marker=dict(size=4)
+                            ))
+                            
+                            fig.update_layout(
+                                title=f'Cost Function Convergence - {scaling_methods[selected_method_for_details]}',
+                                xaxis_title='Iteration',
+                                yaxis_title='Cost (MSE)',
+                                hovermode='x unified',
+                                height=400
+                            )
+                            
+                            st.plotly_chart(fig, use_container_width=True)
+                            
+                            # Show convergence statistics
+                            if len(costs) > 1:
+                                initial_cost = costs[0]
+                                final_cost = costs[-1]
+                                cost_reduction = ((initial_cost - final_cost) / initial_cost) * 100
+                                
+                                col1, col2, col3, col4 = st.columns(4)
+                                with col1:
+                                    st.metric("Initial Cost", f"{initial_cost:.6f}")
+                                with col2:
+                                    st.metric("Final Cost", f"{final_cost:.6f}")
+                                with col3:
+                                    st.metric("Cost Reduction", f"{cost_reduction:.2f}%")
+                                with col4:
+                                    st.metric("Total Iterations", len(iteration_details))
+                        
+                        with tab3:
+                            st.write("**Parameters Evolution Over Iterations**")
+                            
+                            # Plot learning rate evolution
+                            learning_rates = [d['learning_rate'] for d in iteration_details]
+                            
+                            fig_lr = go.Figure()
+                            fig_lr.add_trace(go.Scatter(
+                                x=iterations,
+                                y=learning_rates,
+                                mode='lines+markers',
+                                name='Learning Rate',
+                                line=dict(color='red', width=2),
+                                marker=dict(size=4)
+                            ))
+                            
+                            fig_lr.update_layout(
+                                title='Learning Rate Evolution',
+                                xaxis_title='Iteration',
+                                yaxis_title='Learning Rate',
+                                height=300
+                            )
+                            
+                            st.plotly_chart(fig_lr, use_container_width=True)
+                            
+                            # Plot weights evolution
+                            if len(iteration_details) > 0:
+                                n_weights = len(iteration_details[0]['weights'])
+                                
+                                fig_weights = go.Figure()
+                                
+                                for i in range(min(n_weights, 5)):  # Show max 5 weights for clarity
+                                    weight_values = [d['weights'][i] for d in iteration_details]
+                                    fig_weights.add_trace(go.Scatter(
+                                        x=iterations,
+                                        y=weight_values,
+                                        mode='lines',
+                                        name=f'Weight {i+1}',
+                                        line=dict(width=2)
+                                    ))
+                                
+                                fig_weights.update_layout(
+                                    title='Weights Evolution (First 5 Features)',
+                                    xaxis_title='Iteration',
+                                    yaxis_title='Weight Value',
+                                    height=300
+                                )
+                                
+                                st.plotly_chart(fig_weights, use_container_width=True)
+                                
+                                if n_weights > 5:
+                                    st.info(f"Showing first 5 out of {n_weights} feature weights for clarity")
                     
                     # Best model recommendation
                     st.subheader("🏆 Best Model Recommendation")

@@ -1,0 +1,7 @@
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://0.0.0.0:12000
+
+2025-05-25 21:43:39.972 `label` got an empty value. This is discouraged for accessibility reasons and may be disallowed in the future by raising an exception. Please provide a non-empty label and hide it with label_visibility if needed.
+2025-05-25 21:43:39.973 `label` got an empty value. This is discouraged for accessibility reasons and may be disallowed in the future by raising an exception. Please provide a non-empty label and hide it with label_visibility if needed.

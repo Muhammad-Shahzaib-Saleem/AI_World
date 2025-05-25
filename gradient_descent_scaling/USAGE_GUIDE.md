@@ -159,6 +159,88 @@ Click "Train Models" to start the optimization process and view results.
 - Reduce learning rate
 - Apply feature scaling
 
+## 🔍 Iteration-by-Iteration Analysis
+
+### Overview
+The application now provides detailed tracking of every iteration in the gradient descent process, giving you complete visibility into how the algorithm optimizes your model.
+
+### Accessing Iteration Details
+1. **Train your models** using the main interface
+2. **Scroll down** to the "🔍 Detailed Iteration Analysis" section
+3. **Select a scaling method** from the dropdown to view its iteration details
+4. **Explore three tabs** with different views of the optimization process
+
+### Tab 1: Summary Table 📊
+- **Purpose**: Quick overview of key metrics for each iteration
+- **Contents**:
+  - Iteration number
+  - Cost function value (MSE)
+  - Current learning rate
+  - Bias term value
+  - Average absolute weight value
+- **Features**:
+  - Smart sampling for large iteration counts (shows every Nth iteration)
+  - Download full details as CSV for external analysis
+  - Sortable and searchable table
+
+### Tab 2: Cost Progress 📈
+- **Purpose**: Visualize convergence behavior over time
+- **Contents**:
+  - Interactive line plot of cost vs iteration
+  - Hover details for exact values
+  - Convergence statistics (initial cost, final cost, reduction percentage)
+- **Use Cases**:
+  - Identify convergence patterns
+  - Detect oscillations or divergence
+  - Compare convergence speed between methods
+
+### Tab 3: Parameters Evolution ⚙️
+- **Purpose**: Track how model parameters change during training
+- **Contents**:
+  - Learning rate evolution (shows adaptive changes)
+  - Weights evolution for first 5 features
+  - Interactive plots with hover details
+- **Insights**:
+  - See when adaptive learning rate kicks in
+  - Understand feature importance development
+  - Identify parameter stability
+
+### Practical Applications
+
+#### 1. Debugging Convergence Issues
+```
+If your model isn't converging:
+1. Check Cost Progress tab for oscillations
+2. Look at Parameters Evolution for instability
+3. Examine learning rate changes in Summary Table
+```
+
+#### 2. Comparing Scaling Methods
+```
+To understand why one scaling method works better:
+1. Train with multiple methods
+2. Compare iteration counts in main results
+3. Use iteration details to see convergence patterns
+4. Analyze parameter stability across methods
+```
+
+#### 3. Hyperparameter Tuning
+```
+For optimal learning rate selection:
+1. Try different learning rates
+2. Compare convergence speed in Cost Progress
+3. Look for smooth vs oscillating patterns
+4. Check if adaptive rate is frequently triggered
+```
+
+### Export and Further Analysis
+- **CSV Export**: Download complete iteration data for external analysis
+- **File Contents**: All iterations with full parameter details
+- **Use Cases**: 
+  - Create custom visualizations
+  - Perform statistical analysis
+  - Generate reports for presentations
+
 ## 📈 Sample Datasets
 
 The project includes three sample datasets for testing:
